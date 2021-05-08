@@ -174,7 +174,7 @@ class Dota extends Component {
     const charts = win_rate ? Object.keys(win_rate) : null;
 
     const imgTeamSelect = team_info
-      ? team === '1'
+      ? team === '1' || team === 1
         ? team_info.team1.logoURL
         : team_info.team2.logoURL
       : '';
@@ -281,7 +281,7 @@ class Dota extends Component {
                 alignItems: 'center',
               }}
             >
-              {lineup[team === '1' ? 'team1' : 'team2'].map((itemTeam) => {
+              {lineup[team === '1' || team === 1 ? 'team1' : 'team2'].map((itemTeam) => {
                 return (
                   <img
                     alt={itemTeam.name}
