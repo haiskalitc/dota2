@@ -1,3 +1,3 @@
-import { Dota } from "./dota";
+import Dota from "./dota";
 
 export { Dota };
