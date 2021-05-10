@@ -45,7 +45,15 @@ class Dota extends Component {
         <ResponsiveContainer width="100%" height="120%">
           <ComposedChart
             layout="vertical"
-            data={charts}
+            data={charts.map((item) => {
+              return {
+                ...item,
+                cus: {
+                  img: item.image,
+                  txt: item.rate,
+                },
+              };
+            })}
             margin={{
               left: 70,
               right: 80,
@@ -89,11 +97,34 @@ class Dota extends Component {
                   ></Cell>
                 );
               })}
-              <LabelList dataKey="rate" position="top" />
+              <LabelList
+                dataKey="cus"
+                position="top"
+                content={this.customLabel}
+              />
             </Bar>
           </ComposedChart>
         </ResponsiveContainer>
       )
+    );
+  };
+
+  customLabel = (props) => {
+    const { x, y, value } = props;
+    console.log(props);
+    return (
+      <g>
+        <text
+          x={!!value.img ? x + 90 : x + 60}
+          y={y - 5}
+          fill={props.style.fill}
+        >
+          {!!value.img
+            ? `${value.txt} %(winrate)`
+            : `Total ${value.txt} %(winrate)`}
+        </text>
+        <image href={value.img} width="40" height="40" x={x + 40} y={y - 32} />
+      </g>
     );
   };
 
@@ -164,7 +195,7 @@ class Dota extends Component {
   componentWillUnmount = () => {};
 
   render() {
-    const { data, matchId, team, isLoading } = this.state;
+    const { data, matchId, isLoading } = this.state;
     const { lineup, team_info, win_rate, predict } = data || {};
 
     return (
@@ -213,6 +244,22 @@ class Dota extends Component {
             </Button>
           </div>
 
+          {!!predict && (
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+                flexDirection: 'column',
+                alignItems: 'center',
+                fontSize: '20px',
+              }}
+            >
+              {predict['team1'] > predict['team2']
+                ? `Chọn ${team_info['team1'].name}`
+                : `Chọn ${team_info['team2'].name}`}
+            </div>
+          )}
+
           <Grid
             item
             container
@@ -221,27 +268,9 @@ class Dota extends Component {
               justifyContent: 'center',
             }}
           >
-            {['team1', 1, 'team2'].map((t) => {
-              return t === 1 ? (
-                <Grid key={t} item xs={2}>
-                  {!!predict && (
-                    <div
-                      style={{
-                        display: 'flex',
-                        justifyContent: 'center',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                        fontSize: '20px'
-                      }}
-                    >
-                      {predict['team1'] > predict['team2']
-                        ? `Chọn ${team_info['team1'].name}`
-                        : `Chọn ${team_info['team2'].name}`}
-                    </div>
-                  )}
-                </Grid>
-              ) : (
-                <Grid key={t} item xs={5}>
+            {['team1', 'team2'].map((t) => {
+              return (
+                <Grid key={t} item xs={6}>
                   {!!team_info && (
                     <div
                       style={{
@@ -308,7 +337,7 @@ class Dota extends Component {
                             item
                             xs={10}
                             style={{
-                              height: '400px',
+                              height: '480px',
                               margin: '10px',
                               display: 'flex',
                               flexDirection: 'column',
@@ -340,8 +369,28 @@ class Dota extends Component {
               );
             })}
           </Grid>
+        </Grid>
+        <div
+          style={{
+            position: 'absolute',
+            bottom: 0,
+            left: 0,
+            height: '50px',
+            lineHeight: '50px',
+            width: '100%',
+            textAlign: 'center',
+            color: '#84849D',
+          }}
+        >
+          Copyright © 2021 - 2022 Zun. API version 2.
+        </div>
+      </Box>
+    );
+  }
+}
+export default Dota;
 
-          {/* <div
+/* <div
             style={{
               marginRight: '15%',
               marginLeft: '15%',
@@ -367,10 +416,4 @@ class Dota extends Component {
                 {team_info && team_info.team2 && team_info.team2.name}
               </option>
             </select>
-          </div> */}
-        </Grid>
-      </Box>
-    );
-  }
-}
-export default Dota;
+          </div> */
