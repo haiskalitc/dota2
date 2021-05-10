@@ -19,7 +19,7 @@ services:
       - ./config/nginx-custom.conf:/etc/nginx/conf.d/default.conf
       - ./config/mime.types:/etc/nginx/mime.types
       - ./production:/usr/share/nginx/html
-    container_name: web
+    container_name: web-dota2
     networks:
       - default
 
