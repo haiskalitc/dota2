@@ -386,31 +386,3 @@ class Dota extends Component {
   }
 }
 export default Dota;
-
-/* <div
-            style={{
-              marginRight: '15%',
-              marginLeft: '15%',
-              marginBottom: '3%',
-              display: 'flex',
-              flexDirection: 'column',
-            }}
-          >
-            <InputLabel id="team">Select Team</InputLabel>
-            <select
-              className="select"
-              style={{
-                height: '50px',
-              }}
-              id="team"
-              value={+team}
-              onChange={this.handleChangeTeam}
-            >
-              <option value={1}>
-                {team_info && team_info.team1 && team_info.team1.name}
-              </option>
-              <option value={2}>
-                {team_info && team_info.team2 && team_info.team2.name}
-              </option>
-            </select>
-          </div> */
