@@ -369,21 +369,18 @@ class Dota extends Component {
               );
             })}
           </Grid>
+          <div
+            style={{
+              height: '50px',
+              lineHeight: '50px',
+              width: '100%',
+              textAlign: 'center',
+              color: '#84849D',
+            }}
+          >
+            Copyright © 2021 - 2022 Zun. API version 2.
+          </div>
         </Grid>
-        <div
-          style={{
-            position: 'absolute',
-            bottom: 0,
-            left: 0,
-            height: '50px',
-            lineHeight: '50px',
-            width: '100%',
-            textAlign: 'center',
-            color: '#84849D',
-          }}
-        >
-          Copyright © 2021 - 2022 Zun. API version 2.
-        </div>
       </Box>
     );
   }
