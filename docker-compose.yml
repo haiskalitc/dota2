@@ -1,19 +1,19 @@
 version: '3'
 services:
   builder:
-    image: node:14.16.0
+    image: node:12.18.3
     volumes:
-      - /:/var/www/html
+      - ./:/var/www/html
     container_name: builder
     command: >
-      bash -c "cd /var/www/html && yarn install && yarn build && rm -rf production && cp -R dist/* production"
-
+      bash -c "cd /var/www/html && yarn install && yarn build && rm -rf production/* && cp -R dist/* production"
+  
   web:
     depends_on:
       - builder
     image: nginx
     ports:
-      - '6969:80'
+      - '8668:80'
     restart: always
     volumes:
       - ./config/nginx-custom.conf:/etc/nginx/conf.d/default.conf
@@ -22,18 +22,6 @@ services:
     container_name: web
     networks:
       - dota2
-
-  # api:
-  #   image: node:14.16.0
-  #   ports:
-  #     - '3000:3000'
-  #   volumes:
-  #     - ./backend:/var/www/html
-  #   container_name: api
-  #   command: >
-  #     bash -c "cd /var/www/html && yarn install && yarn start"
-  #   networks:
-  #     - rs_coding
 
 networks:
   dota2:
