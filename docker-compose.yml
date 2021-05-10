@@ -1,16 +1,16 @@
 version: '3'
 services:
-  builder:
+  builder-dota2:
     image: node:12.18.3
     volumes:
       - ./:/var/www/html
-    container_name: builder
+    container_name: builder-dota2
     command: >
       bash -c "cd /var/www/html && yarn install && yarn build && rm -rf production/* && cp -R dist/* production"
 
-  web:
+  web-dota2:
     depends_on:
-      - builder
+      - builder-dota2
     image: nginx
     ports:
       - '8668:80'
