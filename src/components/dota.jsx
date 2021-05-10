@@ -38,7 +38,7 @@ class Dota extends Component {
   }
 
   MelonMostChart = (data) => {
-    const charts = [...data.enemies, { name: 'total', rate: data.total }];
+    const charts = [...data.enemies];
 
     return (
       charts && (
@@ -55,14 +55,16 @@ class Dota extends Component {
               };
             })}
             margin={{
+              top: 20,
               left: 70,
-              right: 80,
+              right: -10,
             }}
           >
             <CartesianGrid
               strokeDasharray="0"
               opacity={0.5}
-              horizontal={true}
+              horizontal={false}
+              vertical={true}
               stroke="#000000"
             />
             <Tooltip />
@@ -73,7 +75,7 @@ class Dota extends Component {
                 fill: '#000000',
                 fontFamily: 'Montserrat',
               }}
-              tickCount={10}
+              tickCount={1}
             />
             <YAxis
               tick={{
@@ -116,14 +118,20 @@ class Dota extends Component {
       <g>
         <text
           x={!!value.img ? x + 90 : x + 60}
-          y={y - 5}
+          y={y - 15}
           fill={props.style.fill}
         >
           {!!value.img
-            ? `${value.txt} %(winrate)`
+            ? `${Math.round(value.txt * 100) / 100} %(winrate)`
             : `Total ${value.txt} %(winrate)`}
         </text>
-        <image href={value.img} width="40" height="40" x={x + 40} y={y - 32} />
+        <image
+          href={value && value.img}
+          width="60"
+          height="60"
+          x={x + 10}
+          y={y - 52}
+        />
       </g>
     );
   };
@@ -290,7 +298,7 @@ class Dota extends Component {
                         src={team_info[t].logoURL}
                       />
                       <p>{team_info[t].name}</p>
-                      <p>{predict[t]}</p>
+                      <p>{Math.round(predict[t] * 100) / 100}</p>
                     </div>
                   )}
 
@@ -326,7 +334,7 @@ class Dota extends Component {
                     style={{
                       display: 'flex',
                       justifyContent: 'center',
-                      marginTop: '10pxs',
+                      marginTop: '20px',
                     }}
                   >
                     {win_rate &&
@@ -345,6 +353,16 @@ class Dota extends Component {
                             }}
                           >
                             {this.MelonMostChart(item)}
+                            <p
+                              style={{
+                                color: '#FF33B0',
+                                marginTop: '-8px',
+                                lineHeight: 0,
+                              }}
+                            >
+                              Total {Math.round(item.total * 100) / 100}{' '}
+                              %(winrate)
+                            </p>
                             <img
                               alt={item && item.name}
                               width="50px"
