@@ -38,13 +38,8 @@ class Dota extends Component {
   }
 
   MelonMostChart = (data) => {
-    const temp = data && Object.keys(data);
-    const charts = temp.map((item) => {
-      return {
-        name: item,
-        perc: data[item],
-      };
-    });
+    const charts = [...data.enemies, { name: 'total', rate: data.total }];
+
     return (
       charts && (
         <ResponsiveContainer width="100%" height="120%">
@@ -52,7 +47,7 @@ class Dota extends Component {
             layout="vertical"
             data={charts}
             margin={{
-              left: 50,
+              left: 70,
               right: 80,
             }}
           >
@@ -83,7 +78,7 @@ class Dota extends Component {
               dataKey="name"
               type="category"
             />
-            <Bar dataKey="perc" radius={[0, 20, 20, 0]} barSize={10}>
+            <Bar dataKey="rate" radius={[0, 20, 20, 0]} barSize={10}>
               {charts.map((item, index) => {
                 return (
                   <Cell
@@ -94,13 +89,17 @@ class Dota extends Component {
                   ></Cell>
                 );
               })}
-              <LabelList dataKey="perc" position="top" />
+              <LabelList
+                dataKey="rate"
+                position="top"
+              />
             </Bar>
           </ComposedChart>
         </ResponsiveContainer>
       )
     );
   };
+
 
   handleChange = (data) => {
     this.setState(() => {
@@ -125,7 +124,7 @@ class Dota extends Component {
           isLoading: true,
         };
       });
-      fetch(`https://api-betting.brickmate.kr/api/v1/analyze?matchId=${value}`)
+      fetch(`https://api-betting.brickmate.kr/api/v2/analyze?matchId=${value}`)
         .then((response) => response.json())
         .then((data) => {
           if (data.error) {
@@ -171,8 +170,8 @@ class Dota extends Component {
   render() {
     const { data, matchId, team, isLoading } = this.state;
     const { lineup, team_info, win_rate, predict } = data || {};
-    const charts = win_rate ? Object.keys(win_rate) : null;
-
+    const charts =
+      win_rate && win_rate[team === '1' || team === 1 ? 'team1' : 'team2'];
     const imgTeamSelect = team_info
       ? team === '1' || team === 1
         ? team_info.team1.logoURL
@@ -242,7 +241,7 @@ class Dota extends Component {
                 alt={1}
                 src={imgTeamSelect}
               />
-              <p>{predict}</p>
+              <p>{predict[team === '1' || team === 1 ? 'team1' : 'team2']}</p>
             </div>
           )}
           <div
@@ -281,20 +280,23 @@ class Dota extends Component {
                 alignItems: 'center',
               }}
             >
-              {lineup[team === '1' || team === 1 ? 'team1' : 'team2'].map((itemTeam) => {
-                return (
-                  <img
-                    alt={itemTeam.name}
-                    src={itemTeam.image}
-                    style={{
-                      width: '50px',
-                      height: '50px',
-                      margin: '5px',
-                      objectFit: 'cover',
-                    }}
-                  />
-                );
-              })}
+              {lineup[team === '1' || team === 1 ? 'team1' : 'team2'].map(
+                (itemTeam, indexTeam) => {
+                  return (
+                    <img
+                      alt={itemTeam.name}
+                      src={itemTeam.image}
+                      key={indexTeam + 'xxx'}
+                      style={{
+                        width: '50px',
+                        height: '50px',
+                        margin: '5px',
+                        objectFit: 'cover',
+                      }}
+                    />
+                  );
+                }
+              )}
             </div>
           )}
 
@@ -321,8 +323,23 @@ class Dota extends Component {
                       alignItems: 'center',
                     }}
                   >
-                    {this.MelonMostChart(win_rate && win_rate[item])}
-                    <p>{item}</p>
+                    {this.MelonMostChart(item)}
+                    <img
+                      alt={item && item.name}
+                      width="50px"
+                      height="50px"
+                      style={{
+                        objectFit: 'cover',
+                      }}
+                      src={item && item.image}
+                    />
+                    <p
+                      style={{
+                        marginTop: '0px',
+                      }}
+                    >
+                      {item && item.name}
+                    </p>
                   </Grid>
                 );
               })}
