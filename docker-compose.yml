@@ -7,7 +7,7 @@ services:
     container_name: builder
     command: >
       bash -c "cd /var/www/html && yarn install && yarn build && rm -rf production/* && cp -R dist/* production"
-  
+
   web:
     depends_on:
       - builder
@@ -21,8 +21,9 @@ services:
       - ./production:/usr/share/nginx/html
     container_name: web
     networks:
-      - dota2
+      - default
 
 networks:
-  dota2:
-    driver: bridge
+  default:
+    external:
+      name: nginx-proxy-manager_default
