@@ -89,17 +89,13 @@ class Dota extends Component {
                   ></Cell>
                 );
               })}
-              <LabelList
-                dataKey="rate"
-                position="top"
-              />
+              <LabelList dataKey="rate" position="top" />
             </Bar>
           </ComposedChart>
         </ResponsiveContainer>
       )
     );
   };
-
 
   handleChange = (data) => {
     this.setState(() => {
@@ -170,13 +166,6 @@ class Dota extends Component {
   render() {
     const { data, matchId, team, isLoading } = this.state;
     const { lineup, team_info, win_rate, predict } = data || {};
-    const charts =
-      win_rate && win_rate[team === '1' || team === 1 ? 'team1' : 'team2'];
-    const imgTeamSelect = team_info
-      ? team === '1' || team === 1
-        ? team_info.team1.logoURL
-        : team_info.team2.logoURL
-      : '';
 
     return (
       <Box>
@@ -223,28 +212,136 @@ class Dota extends Component {
               ANALYZE
             </Button>
           </div>
-          {!!imgTeamSelect && (
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'center',
-                flexDirection: 'column',
-                alignItems: 'center',
-              }}
-            >
-              <img
-                style={{
-                  width: '100px',
-                  height: '100px',
-                  objectFit: 'cover',
-                }}
-                alt={1}
-                src={imgTeamSelect}
-              />
-              <p>{predict[team === '1' || team === 1 ? 'team1' : 'team2']}</p>
-            </div>
-          )}
-          <div
+
+          <Grid
+            item
+            container
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+            }}
+          >
+            {['team1', 1, 'team2'].map((t) => {
+              return t === 1 ? (
+                <Grid key={t} item xs={2}>
+                  {!!predict && (
+                    <div
+                      style={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        fontSize: '20px'
+                      }}
+                    >
+                      {predict['team1'] > predict['team2']
+                        ? `Chọn ${team_info['team1'].name}`
+                        : `Chọn ${team_info['team2'].name}`}
+                    </div>
+                  )}
+                </Grid>
+              ) : (
+                <Grid key={t} item xs={5}>
+                  {!!team_info && (
+                    <div
+                      style={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                      }}
+                    >
+                      <img
+                        style={{
+                          width: '100px',
+                          height: '100px',
+                          objectFit: 'cover',
+                        }}
+                        alt={1}
+                        src={team_info[t].logoURL}
+                      />
+                      <p>{team_info[t].name}</p>
+                      <p>{predict[t]}</p>
+                    </div>
+                  )}
+
+                  {lineup && (
+                    <div
+                      style={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                      }}
+                    >
+                      {lineup[t].map((itemTeam, indexTeam) => {
+                        return (
+                          <img
+                            alt={itemTeam.name}
+                            src={itemTeam.image}
+                            key={indexTeam + 'xxx'}
+                            style={{
+                              width: '50px',
+                              height: '50px',
+                              margin: '5px',
+                              objectFit: 'cover',
+                            }}
+                          />
+                        );
+                      })}
+                    </div>
+                  )}
+
+                  <Grid
+                    item
+                    container
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'center',
+                      marginTop: '10pxs',
+                    }}
+                  >
+                    {win_rate &&
+                      win_rate[t].map((item, index) => {
+                        return (
+                          <Grid
+                            key={index}
+                            item
+                            xs={10}
+                            style={{
+                              height: '400px',
+                              margin: '10px',
+                              display: 'flex',
+                              flexDirection: 'column',
+                              alignItems: 'center',
+                            }}
+                          >
+                            {this.MelonMostChart(item)}
+                            <img
+                              alt={item && item.name}
+                              width="50px"
+                              height="50px"
+                              style={{
+                                objectFit: 'cover',
+                              }}
+                              src={item && item.image}
+                            />
+                            <p
+                              style={{
+                                marginTop: '0px',
+                              }}
+                            >
+                              {item && item.name}
+                            </p>
+                          </Grid>
+                        );
+                      })}
+                  </Grid>
+                </Grid>
+              );
+            })}
+          </Grid>
+
+          {/* <div
             style={{
               marginRight: '15%',
               marginLeft: '15%',
@@ -270,80 +367,7 @@ class Dota extends Component {
                 {team_info && team_info.team2 && team_info.team2.name}
               </option>
             </select>
-          </div>
-
-          {lineup && (
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}
-            >
-              {lineup[team === '1' || team === 1 ? 'team1' : 'team2'].map(
-                (itemTeam, indexTeam) => {
-                  return (
-                    <img
-                      alt={itemTeam.name}
-                      src={itemTeam.image}
-                      key={indexTeam + 'xxx'}
-                      style={{
-                        width: '50px',
-                        height: '50px',
-                        margin: '5px',
-                        objectFit: 'cover',
-                      }}
-                    />
-                  );
-                }
-              )}
-            </div>
-          )}
-
-          <Grid
-            item
-            container
-            style={{
-              display: 'flex',
-              justifyContent: 'center',
-            }}
-          >
-            {charts &&
-              charts.map((item, index) => {
-                return (
-                  <Grid
-                    key={index}
-                    item
-                    xs={5}
-                    style={{
-                      height: '400px',
-                      margin: '10px',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'center',
-                    }}
-                  >
-                    {this.MelonMostChart(item)}
-                    <img
-                      alt={item && item.name}
-                      width="50px"
-                      height="50px"
-                      style={{
-                        objectFit: 'cover',
-                      }}
-                      src={item && item.image}
-                    />
-                    <p
-                      style={{
-                        marginTop: '0px',
-                      }}
-                    >
-                      {item && item.name}
-                    </p>
-                  </Grid>
-                );
-              })}
-          </Grid>
+          </div> */}
         </Grid>
       </Box>
     );
