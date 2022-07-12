@@ -220,7 +220,6 @@ class Dota extends Component {
   render() {
     const { data, matchId, isLoading } = this.state;
     const { lineup, team_info, win_rate, predict } = data || {};
-
     return (
       <Box>
         <Backdrop open={isLoading}>
@@ -310,7 +309,7 @@ class Dota extends Component {
                           objectFit: 'cover',
                         }}
                         alt={1}
-                        src={team_info[t].logoURL}
+                        src={team_info[t].logo_url}
                       />
                       <p>{team_info[t].name}</p>
                       <p>{Math.round(predict[t] * 100) / 100}</p>
