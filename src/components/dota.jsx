@@ -159,7 +159,7 @@ class Dota extends Component {
           isLoading: true,
         };
       });
-      fetch(`https://api-betting.brickmate.kr/api/v2/analyze?matchId=${value}`)
+      fetch(`http://124.158.12.7:1234/api/v2/analyze?matchId=${value}`)
         .then((response) => response.json())
         .then((data) => {
           if (data.error) {
@@ -186,6 +186,21 @@ class Dota extends Component {
             });
             Swal.fire('', 'All in thâu!', 'success');
           }
+        })
+        .catch(res => {
+          this.setState(() => {
+            return {
+              data: null,
+              team: 1,
+              isLoading: false,
+            };
+          });
+          Swal.fire({
+            icon: 'error',
+            title: '',
+            text: 'Data not found!!!',
+            allowOutsideClick: false,
+          });
         });
     } else {
       Swal.fire({
