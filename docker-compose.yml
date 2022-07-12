@@ -15,5 +15,3 @@ services:
 
 networks:
   default:
-    external:
-      name: nginx-proxy-manager_default
